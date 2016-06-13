@@ -61,7 +61,7 @@ echo "Checking fully merged branches against '${branch_name}' ..."
 echo ""
 if [[ `git status --porcelain` ]]; then
 	echo "There are unsaved changes in your repo... " >&2
-	#exit
+	echo ""
 fi
 
 # Update our list of remotes
@@ -74,9 +74,7 @@ then
 fi
 
 # Checkout to reference branch
-if [[ !`git checkout $branch_name` ]]; then
-	exit
-fi
+git checkout $branch_name
 
 echo ""
 echo "${bold}Local branches${normal} fully merged to ${branch_name}:"
