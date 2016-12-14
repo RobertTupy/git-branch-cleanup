@@ -98,5 +98,9 @@ echo ""
 if $delete_remote
 then
 	echo "${bold}Deleting remote branches${normal}"
+	# mac version
+	# git branch -r --merged $branch_name | sed 's/ *origin\///' | grep -vE "(${branch_name}|master|nightly|production)$" | xargs -I F git push origin :"F"
+
+	# other unix systems
 	git branch -r --merged $branch_name | sed 's/ *origin\///' | grep -vE "(${branch_name}|master|nightly|production)$" | xargs -i% git push origin :%
 fi
