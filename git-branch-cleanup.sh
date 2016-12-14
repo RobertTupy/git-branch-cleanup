@@ -16,6 +16,8 @@ HELP
 exit
 }
 
+
+
 dir=$(dirname $0)
 prune=false
 delete_local=false
@@ -56,6 +58,27 @@ while getopts "lrab:h" opt; do
 			;;
 	esac
 done
+
+OS="`uname`"
+case $OS in
+  'Linux')
+    OS='Linux'
+    ;;
+  'FreeBSD')
+    OS='FreeBSD'
+    ;;
+  'WindowsNT')
+    OS='Windows'
+    ;;
+  'Darwin')
+    OS='Mac'
+    ;;
+  'SunOS')
+    OS='Solaris'
+    ;;
+  'AIX') ;;
+  *) ;;
+esac
 
 echo "Checking fully merged branches against '${branch_name}' ..."
 echo ""
@@ -98,9 +121,12 @@ echo ""
 if $delete_remote
 then
 	echo "${bold}Deleting remote branches${normal}"
-	# mac version
-	# git branch -r --merged $branch_name | sed 's/ *origin\///' | grep -vE "(${branch_name}|master|nightly|production)$" | xargs -I F git push origin :"F"
-
-	# other unix systems
-	git branch -r --merged $branch_name | sed 's/ *origin\///' | grep -vE "(${branch_name}|master|nightly|production)$" | xargs -i% git push origin :%
+	if [ ${OS} == 'Mac' ];
+	then
+		# mac version
+		git branch -r --merged $branch_name | sed 's/ *origin\///' | grep -vE "(${branch_name}|master|nightly|production)$" | xargs -I F git push origin :"F"
+	else
+		# other unix systems
+		git branch -r --merged $branch_name | sed 's/ *origin\///' | grep -vE "(${branch_name}|master|nightly|production)$" | xargs -i% git push origin :%
+	fi
 fi
